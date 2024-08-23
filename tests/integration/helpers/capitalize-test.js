@@ -13,5 +13,5 @@ module('Integration | Helper | capitalize', function (hooks) {
     assert.dom(this.element).hasText('Seven Nations Army');
     this.set('title', 'MVC');
     assert.dom(this.element).hasText('MVC');
-  });    
+  });
 });

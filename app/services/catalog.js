@@ -100,8 +100,8 @@ export default class CatalogService extends Service {
         headers: {
           'Content-Type': 'application/vnd.api+json',
         },
-      body: JSON.stringify(payload),
-      }
+        body: JSON.stringify(payload),
+      },
     );
     let json = await response.json();
     return this.load(json);
@@ -116,9 +116,9 @@ export default class CatalogService extends Service {
       },
     };
     let url =
-       type === 'band'
-         ? `${this.bandsURL}/${record.id}`
-         : `${this.songsURL}/${record.id}`;
+      type === 'band'
+        ? `${this.bandsURL}/${record.id}`
+        : `${this.songsURL}/${record.id}`;
 
     await fetch(url, {
       method: 'PATCH',

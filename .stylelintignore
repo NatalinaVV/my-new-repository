@@ -6,3 +6,6 @@
 
 # addons
 /.node_modules.ember-try/
+
+#ember-tailwind-dependecies
+app/styles/app.css
