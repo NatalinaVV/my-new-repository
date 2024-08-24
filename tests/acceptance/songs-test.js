@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { visit, currentURL, click, settled, fillIn } from '@ember/test-helpers';
+import { visit, currentURL, click, fillIn } from '@ember/test-helpers';
 import { setupApplicationTest } from 'rock-and-roll/tests/helpers';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 
