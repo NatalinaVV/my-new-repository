@@ -58,7 +58,7 @@
 </div>
 {{#if this.sortedSongs.length}}
 
-  <ul>
+  <ul data-test-rr="songs-list-item">
     {{#each this.sortedSongs as |song|}}
       <li class="mb-2" data-test-rr="song-list-item">
         {{capitalize song.title}}
