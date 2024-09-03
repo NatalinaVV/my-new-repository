@@ -1,13 +1,18 @@
-import { debug } from '@ember/debug';
+import ENV from 'rock-and-roll/config/environment';
 
 async function enableMocking() {
-  console.log('Enabling mocking');
+  if (ENV.environment === 'development') {
+    // Проверяем, что мы в режиме разработки
+    console.log('Enabling mocking in development mode');
 
-  const { worker } = await import('../mocks/browser');
+    const { worker } = await import('../mocks/browser');
 
-  // `worker.start()` returns a Promise that resolves
-  // once the Service Worker is up and ready to intercept requests.
-  worker.start();
+    // `worker.start()` возвращает Promise, который решается
+    // после того, как Service Worker будет готов перехватывать запросы.
+    worker.start();
+  } else {
+    console.log('MSW is disabled in production');
+  }
 }
 
 export function initialize(application) {
