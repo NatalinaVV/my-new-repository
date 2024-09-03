@@ -9,5 +9,19 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar'),
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.scrollbar-hide': {
+          '-ms-overflow-style': 'none' /* IE и Edge */,
+          'scrollbar-width': 'none' /* Firefox */,
+          '&::-webkit-scrollbar': {
+            display: 'none' /* Chrome, Safari и Opera */,
+          },
+        },
+      };
+      addUtilities(newUtilities);
+    },
+  ],
 };

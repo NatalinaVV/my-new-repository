@@ -10,7 +10,7 @@ Router.map(function () {
   this.route('bands', { path: '/' }, function () {
     this.route('band', { path: 'bands/:id' }, function () {
       this.route('albums');
-      this.route('history', { path: '/' });
+      this.route('history');
       this.route('members');
       this.route('songs');
       this.route('details');

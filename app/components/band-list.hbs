@@ -1,14 +1,54 @@
-<ul class="pl-2 pr-8">
+<ul class="pl-2 pr-8 space-y-2">
   {{#each this.bands as |item|}}
-    <li class="mb-2" data-test-rr="band-list-item">
+    <li
+      class="mb-2 flex justify-between items-center"
+      data-test-rr="band-list-item"
+    >
       <LinkTo
-        class={{if item.isActive "border-purple-400 border-l-4 pl-2"}}
+        class="block p-2 transition-all duration-300
+          {{if
+            item.isActive
+            'border-purple-400 border-l-4 pl-2 text-white translate-x-1 font-semibold'
+            'hover:bg-purple-200 hover:text-purple-900 hover:shadow-lg hover:translate-x-1 rounded-lg'
+          }}"
         @route="bands.band"
         @model={{item.band.id}}
         data-test-rr="band-link"
       >
         {{capitalize item.band.name}}
       </LinkTo>
+      <div>
+        <button
+          type="button"
+          title="Edit band"
+          class="inline-block ml-2 mt-2 p-2 rounded shadow-md hover:shadow-lg hover:text-white hover:bg-purple-500 focus:outline-none"
+          {{on "click" (fn (mut this.currentModalId) item.band.id)}}
+        ><FaIcon class="h-5 w-5 text-gray-500" @icon="edit" @prefix="fas" />
+        </button>
+        {{#if (eq this.currentModalId item.band.id)}}
+          <ModalDialog
+            @onClose={{fn (mut this.currentModalId) null}}
+            @hasOverlay={{true}}
+            @contentElementId="modal-overlays"
+          >
+            <UpdateBand
+              @band={{item.band}}
+              @onSave={{this.saveUpdatedBand}}
+              @onClose={{fn (mut this.currentModalId) null}}
+            />
+          </ModalDialog>
+        {{/if}}
+        <button
+          type="button"
+          title="Delete band"
+          class="inline-block ml-2 mt-2 p-2 rounded shadow-md hover:shadow-lg hover:text-white hover:bg-purple-500 focus:outline-none"
+          {{on "click" (fn this.removeBand item.band)}}
+        ><FaIcon
+            class="h-5 w-5 text-gray-500"
+            @icon="trash"
+            @prefix="fas"
+          /></button>
+      </div>
     </li>
   {{/each}}
 </ul>

@@ -60,14 +60,48 @@
 
   <ul data-test-rr="songs-list-item">
     {{#each this.sortedSongs as |song|}}
-      <li class="mb-2" data-test-rr="song-list-item">
+      <li
+        class="mb-2 flex justify-between duration-100 hover:font-semibold"
+        data-test-rr="song-list-item"
+      >
         {{capitalize song.title}}
-        <span class="float-right">
-          <StarRating
-            @rating={{song.rating}}
-            @onUpdate={{fn this.updateRating song}}
-          />
-        </span>
+        <div class="float-right">
+          <span>
+            <StarRating
+              @rating={{song.rating}}
+              @onUpdate={{fn this.updateRating song}}
+            />
+          </span>
+
+          <button
+            type="button"
+            title="Edit song"
+            class="inline-block ml-2 mt-2 p-2 rounded shadow-md hover:shadow-lg hover:text-white hover:bg-purple-500 focus:outline-none"
+            {{on "click" (fn this.openEditSongModal song)}}
+          ><FaIcon class="h-5 w-5 text-gray-500" @icon="edit" @prefix="fas" />
+          </button>
+          {{#if (eq this.currentEditingSong song)}}
+            <ModalDialog @hasOverlay={{true}} @overlayPosition="parent">
+              <SongModal
+                @onClose={{this.closeModal}}
+                @onUpdateSong={{this.editSong}}
+                @song={{song}}
+                @hasOverlay={{true}}
+                @overlayPosition="parent"
+              />
+            </ModalDialog>
+          {{/if}}
+          <button
+            type="button"
+            title="Delete song"
+            class="inline-block ml-2 mt-2 p-2 rounded shadow-md hover:shadow-lg hover:text-white hover:bg-purple-500 focus:outline-none"
+            {{on "click" (fn this.removeSong song)}}
+          ><FaIcon
+              class="h-5 w-5 text-gray-500"
+              @icon="trash"
+              @prefix="fas"
+            /></button>
+        </div>
       </li>
     {{/each}}
   </ul>
@@ -82,10 +116,25 @@
     <button
       type="button"
       class="px-4 py-2 rounded bg-purple-600 shadow-md hover:shadow-lg hover:text-white hover:bg-purple-500 focus:outline-none"
-      {{on "click" (set this "showAddSong" false)}}
+      {{on "click" (fn (mut this.isModalOpen) true)}}
     >
       Add song
     </button>
+    {{#if this.isModalOpen}}
+      <ModalDialog
+        @onClose={{fn (mut this.showModal) false}}
+        @hasOverlay={{true}}
+        @overlayPosition="parent"
+      >
+        <SongModal
+          @onClose={{this.closeModal}}
+          @onAddSong={{this.addSong}}
+          @band={{this.model}}
+          @hasOverlay={{true}}
+          @overlayPosition="parent"
+        />
+      </ModalDialog>
+    {{/if}}
   </div>
 {{else}}
   <div class="mt-6 flex">

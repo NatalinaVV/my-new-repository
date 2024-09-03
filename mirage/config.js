@@ -30,6 +30,12 @@ function routes() {
   });
 
   this.post('/bands');
+
+  this.namespace = 'api'; // настройте namespace, если нужно
+  this.post('/chat', (schema, request) => {
+    let attrs = JSON.parse(request.requestBody);
+    return { response: `Ответ на "${attrs.message}"` };
+  });
   // These comments are here to help you get started. Feel free to delete them.
 
   /*

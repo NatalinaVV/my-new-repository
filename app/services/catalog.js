@@ -34,6 +34,7 @@ export default class CatalogService extends Service {
     if (type === 'bands') {
       let response = await fetch(this.bandsURL);
       let json = await response.json();
+
       this.loadAll(json);
       return this.bands;
     }
@@ -85,6 +86,32 @@ export default class CatalogService extends Service {
     return record[relationship];
   }
 
+  _handleUpdate(type, updatedData) {
+    const storageKey = type === 'bands' ? 'bands' : 'songs';
+    const index = this.storage[storageKey].findIndex(
+      (item) => item.id === updatedData.id,
+    );
+
+    if (index !== -1) {
+      this.storage[storageKey][index] = this._loadResource(updatedData);
+      return updatedData;
+    }
+
+    return false;
+  }
+
+  _handleDeletion(type, id) {
+    const storageKey = type === 'bands' ? 'bands' : 'songs';
+    const index = this.storage[storageKey].findIndex((item) => item.id === id);
+
+    if (index !== -1) {
+      this.storage[storageKey].splice(index, 1);
+      return true;
+    }
+
+    return false;
+  }
+
   async create(type, attributes, relationships = {}) {
     let payload = {
       data: {
@@ -107,26 +134,48 @@ export default class CatalogService extends Service {
     return this.load(json);
   }
 
-  async update(type, record, attributes) {
+  async delete(type, id = {}) {
+    const url =
+      type === 'bands' ? `${this.bandsURL}/${id}` : `${this.songsURL}/${id}`;
+    let response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/vnd.api+json',
+      },
+    });
+
+    if (await response.ok) {
+      return this._handleDeletion(type, id);
+    }
+    return false;
+  }
+
+  async update({ type, id, attributes }) {
     let payload = {
       data: {
-        id: record.id,
-        type: type === 'band' ? 'bands' : 'songs',
+        id,
+        type: type === 'bands' ? 'bands' : 'songs',
         attributes,
       },
     };
-    let url =
-      type === 'band'
-        ? `${this.bandsURL}/${record.id}`
-        : `${this.songsURL}/${record.id}`;
 
-    await fetch(url, {
+    let url =
+      type === 'bands' ? `${this.bandsURL}/${id}` : `${this.songsURL}/${id}`;
+
+    const response = await fetch(url, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/vnd.api+json',
       },
       body: JSON.stringify(payload),
     });
+
+    const json = await response.json();
+    if (json) {
+      return this._handleUpdate(type, json.data);
+    }
+
+    return false;
   }
 
   add(type, record) {

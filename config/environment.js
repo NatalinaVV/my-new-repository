@@ -1,4 +1,8 @@
 'use strict';
+require('dotenv').config();
+
+const key = process.env.API_KEY;
+const endpoint = process.env.API_URL;
 
 module.exports = function (environment) {
   const ENV = {
@@ -6,6 +10,8 @@ module.exports = function (environment) {
     environment,
     rootURL: '/',
     locationType: 'history',
+    apiUrl: endpoint,
+    apiKey: key,
     EmberENV: {
       EXTEND_PROTOTYPES: false,
       FEATURES: {
@@ -21,14 +27,16 @@ module.exports = function (environment) {
   };
 
   if (environment === 'development') {
-    // ENV.APP.LOG_RESOLVER = true;
-    // ENV.APP.LOG_ACTIVE_GENERATION = true;
-    // ENV.APP.LOG_TRANSITIONS = true;
-    // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
-    // ENV.APP.LOG_VIEW_LOOKUPS = true;
+    ENV['ember-cli-mirage'] = {
+      enabled: false,
+    };
+    ENV.apiHost = 'https://json-api.rockandrollwithemberjs.com';
   }
 
   if (environment === 'test') {
+    ENV['ember-cli-mirage'] = {
+      enabled: true,
+    };
     // Testem prefers this...
     ENV.locationType = 'none';
 
@@ -42,6 +50,9 @@ module.exports = function (environment) {
 
   if (environment === 'production') {
     // here you can enable a production-specific feature
+    ENV['ember-cli-mirage'] = {
+      enabled: false,
+    };
     ENV.apiHost = 'https://json-api.rockandrollwithemberjs.com';
   }
 

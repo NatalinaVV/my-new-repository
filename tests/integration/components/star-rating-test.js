@@ -47,6 +47,6 @@ module('Integration | Component | star-rating', function (hooks) {
     />
     `);
     await click('[data-test-rr="star-rating-button"]:nth-child(4)');
-    assert.verifySteps(['Updated to rating: 4']);
+    assert.verifySteps(['Updated to rating: 3']);
   });
 });

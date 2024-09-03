@@ -1,0 +1,54 @@
+<div class="fixed bottom-0 right-0 m-4">
+  <button
+    class="chat-bot-button bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors duration-300 cursor-pointer
+      {{if this.isChatOpen '-ml-16 translate-y-11'}}"
+    type="button"
+    {{on "click" this.toggleChatWindow}}
+  >
+    <FaIcon @icon="comment-dots" class="h-6 w-6" />
+  </button>
+
+  {{#if this.isChatOpen}}
+    <div class="chat-window bg-white shadow-2xl rounded-lg p-4 w-80">
+      <div
+        class="chat-header flex justify-between items-center text-gray-800 border-b pb-2"
+      >
+        <h3 class="text-lg font-semibold">Чат-бот</h3>
+        <button
+          class="close-button text-gray-200 hover:text-gray-900 transition-colors duration-200"
+          type="button"
+          {{on "click" this.toggleChatWindow}}
+        >✖️</button>
+      </div>
+
+      <div class="chat-body mt-4 h-64 overflow-y-auto space-y-2 scrollbar-hide">
+        {{#each this.messages as |message|}}
+          <div
+            class="message text-gray-800 p-2 rounded-lg shadow-sm
+              {{if
+                (eq message.sender 'You')
+                'bg-blue-100 text-right'
+                'bg-gray-100'
+              }}"
+          >
+            <strong>{{message.sender}}:</strong>
+            {{message.text}}
+          </div>
+        {{/each}}
+      </div>
+
+      <div class="chat-input mt-4">
+        <label for="chat-input" class="sr-only">Ask me...</label>
+        <input
+          type="text"
+          id="chat-input"
+          class="w-full p-3 border border-gray-300 rounded-lg shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-600 text-gray-800"
+          placeholder="Ask me..."
+          value={{this.newMessage}}
+          {{on "input" this.updateNewMessage}}
+          {{on "keypress" this.sendMessageOnEnter}}
+        />
+      </div>
+    </div>
+  {{/if}}
+</div>
